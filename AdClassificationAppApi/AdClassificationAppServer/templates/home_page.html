@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Create running string</title>
+    <style type="text/css">
+       #centerLayer {
+        margin-left: 25%;
+        width: 50%;
+        background: #F5DEB3;
+        padding: 10px;
+       }
+       #textarea {
+        margin-left: 15%;
+       }
+       #user {
+        width: 300px;
+        height: 200px;
+       }
+  </style>
+</head>
+<body bgcolor="#4682B4">
+<div id="centerLayer">
+    <form method="POST" action="{% url 'recognize' %}" id="textarea">
+        {% csrf_token %}
+            <h2>Введите строку объявления</h2><br>
+            <textarea name="ad" id="user"></textarea>
+            {% if answer == True %}
+                <input type="text" name="output" readonly/>
+            {% endif %}
+        <div>
+            <input type="submit" value="Ввести">
+        </div>
+    </form>
+</div>
+
+
+
+{% if history.count > 0 %}
+<div id="centerLayer">
+    <h2>Список запросов</h2>
+    <table border="1">
+        <tr>
+            <th>Время</th>
+            <th>Объявление</th>
+            <th>Класс</th>
+        </tr>
+        {% for record in history %}
+        <tr>
+            <td>{{ record.datetime }}</td>
+            <td>{{ record.input_string }}</td>
+            <td>{{ record.output }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div>
+        <form method="GET" action="{% url 'get_logs' %}">
+        {% csrf_token %}
+            <input type="submit" value="Скачать">
+        </form>
+    </div>
+
+</div>
+{% endif %}
+</body>
+</html>
